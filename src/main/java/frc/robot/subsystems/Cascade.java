@@ -63,7 +63,7 @@ public class Cascade extends SubsystemBase {
     // motor1.setVoltage(Volt1);
     // motor2.setVoltage(Volt2);
 
-    m_pidController.setReference(rotations, CANSparkMax.ControlType.kPosition);
+    // m_pidController.setReference(rotations, CANSparkMax.ControlType.kPosition);
     
   }
 
