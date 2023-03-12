@@ -23,19 +23,19 @@ public class CascadeDistance extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_cascade.cascadeDriveVolts(0, 0);
+    m_cascade.cascadeDrive(0, 0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_cascade.cascadeDriveVolts()
+    m_cascade.cascadeDrive(m_speed, m_distance);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-
+    m_cascade.cascadeDrive(0, 0);
   }
 
 
