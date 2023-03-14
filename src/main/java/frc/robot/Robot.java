@@ -4,10 +4,12 @@
 
 package frc.robot;
 
+import com.revrobotics.REVPhysicsSim;
+
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
@@ -29,6 +31,8 @@ public class Robot extends TimedRobot {
     NetworkTableEntry ty = table.getEntry("Turning");
     NetworkTableEntry ta = table.getEntry("TurningSens");
   private RobotContainer m_robotContainer;
+
+  private Drivetrain m_drive = new Drivetrain();
 
   private XboxController controller = new XboxController(0);
 
@@ -108,7 +112,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    // Drivetrain.controllerMovement(controller);
+    m_drive.controllerMovement(controller);
   }
 
   @Override
@@ -123,7 +127,12 @@ public class Robot extends TimedRobot {
 
   /** This function is called once when the robot is first started up. */
   @Override
-  public void simulationInit() {}
+  public void simulationInit() {
+    REVPhysicsSim.getInstance().addSparkMax(Drivetrain.leftMotor1, DCMotor.getNEO(1));
+    REVPhysicsSim.getInstance().addSparkMax(Drivetrain.leftMotor2, DCMotor.getNEO(1));
+    REVPhysicsSim.getInstance().addSparkMax(Drivetrain.rightMotor1, DCMotor.getNEO(1));
+    REVPhysicsSim.getInstance().addSparkMax(Drivetrain.rightMotor2, DCMotor.getNEO(1));
+  }
 
   /** This function is called periodically whilst in simulation. */
   @Override
@@ -131,5 +140,6 @@ public class Robot extends TimedRobot {
     double drawCurrent = m_robotContainer.getRobotDrive().getDrawnCurrentAmps();
     double loadedVoltage = BatterySim.calculateDefaultBatteryLoadedVoltage(drawCurrent);
     RoboRioSim.setVInVoltage(loadedVoltage);
+    REVPhysicsSim.getInstance().run();
   }
 }

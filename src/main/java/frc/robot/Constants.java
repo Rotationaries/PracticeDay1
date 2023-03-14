@@ -16,21 +16,21 @@ import edu.wpi.first.math.system.plant.LinearSystemId;
  */
 public final class Constants {
   public static final class DriveConstants {
-    public static final int kLeftMotor1Port = 0;
-    public static final int kLeftMotor2Port = 1;
-    public static final int kRightMotor1Port = 2;
-    public static final int kRightMotor2Port = 3;
+    public static final int kLeftMotor1Port = 2;
+    public static final int kLeftMotor2Port = 3;
+    public static final int kRightMotor1Port = 4;
+    public static final int kRightMotor2Port = 5;
 
-    public static final int[] kLeftEncoderPorts = new int[] {0, 1};
-    public static final int[] kRightEncoderPorts = new int[] {2, 3};
-    public static final boolean kLeftEncoderReversed = false;
-    public static final boolean kRightEncoderReversed = true;
+    // public static final int[] kLeftEncoderPorts = new int[] {6, 7};
+    // public static final int[] kRightEncoderPorts = new int[] {8, 9};
+    // public static final boolean kLeftEncoderReversed = false;
+    // public static final boolean kRightEncoderReversed = true;
 
     public static final double kTrackwidthMeters = 0.69;
     public static final DifferentialDriveKinematics kDriveKinematics =
         new DifferentialDriveKinematics(kTrackwidthMeters);
 
-    public static final int kEncoderCPR = 1024;
+    public static final int kEncoderCPR = 42;
     public static final double kWheelDiameterMeters = 0.15;
     public static final double kEncoderDistancePerPulse =
         // Assumes the encoders are directly mounted on the wheel shafts
@@ -86,12 +86,43 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
   }
 
+  public static final class CalibrationConstants {
+    public static final double testAngle = 180;
+    public static final double testSetpoint = 100;
+    public static final double testVelocity = 25;
+
+  }
+
   public static final class CascadeConstants {
     public static final int kCascadeMotor1Port = 6;
     public static final int kCascadeMotor2Port = 7;
-    public static final int[] kCascadeEncoder1Ports = new int[] {0,1};
+    public static final int[] kCascadeEncoder1Ports = new int[] {10,11};
     public static final boolean kCascadeEncoder1Reversed = false;
-    public static final int[] kCascadeEncoder2Ports = new int[] {2,3};
+    public static final int[] kCascadeEncoder2Ports = new int[] {12,13};
     public static final boolean kCascadeEncoder2Reversed = false;
+    public static final double stallCurrent = 105;
+    public static final double nVolt = 12;
+    public static final double testSetpoint = 100;
+    public static final double testVelocity = 25;
+    public static final double kP = 3.2181;
+    public static final double kI = 0;
+    public static final double kD = 0;
+  }
+
+  public static final class LimelightConstants {
+    public static final double tx = 0;
+    public static final double ty = 0;
+    public static final double tv = 0;
+    public static final double ta = 0;
+    public static final double tl = 0;
+    public static final double cl = 0;
+    public static final double tshort = 0;
+    public static final double tlong = 0;
+    public static final double thor = 0;
+    public static final double tvert = 0;
+    public static final double tpipe = 0;
+    public static final double tjson = 0;
+    public static final double tclass = 0;
+    public static final double speed = 0;
   }
 }

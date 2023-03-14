@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.RelativeEncoder;
 
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
@@ -14,8 +15,6 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
-import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.SerialPort;
@@ -23,7 +22,6 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
-import edu.wpi.first.wpilibj.simulation.EncoderSim;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -49,18 +47,12 @@ public class Drivetrain extends SubsystemBase {
   private final DifferentialDrive m_drive = new DifferentialDrive(m_leftMotors, m_rightMotors);
 
   // The left-side drive encoder
-  private final Encoder m_leftEncoder =
-      new Encoder(
-          DriveConstants.kLeftEncoderPorts[0],
-          DriveConstants.kLeftEncoderPorts[1],
-          DriveConstants.kLeftEncoderReversed);
+  private final RelativeEncoder m_leftEncoder1 = leftMotor1.getEncoder();
+  private final RelativeEncoder m_leftEncoder2 = leftMotor2.getEncoder();
+  private final RelativeEncoder m_rightEncoder1 = rightMotor1.getEncoder();
+  private final RelativeEncoder m_rightEncoder2 = rightMotor2.getEncoder();
 
-  // The right-side drive encoder
-  private final Encoder m_rightEncoder =
-      new Encoder(
-          DriveConstants.kRightEncoderPorts[0],
-          DriveConstants.kRightEncoderPorts[1],
-          DriveConstants.kRightEncoderReversed);
+
 
   // The gyro sensor
   private final AHRS ahrs;
@@ -70,8 +62,12 @@ public class Drivetrain extends SubsystemBase {
 
   // These classes help us simulate our drivetrain
   public DifferentialDrivetrainSim m_drivetrainSimulator;
-  private EncoderSim m_leftEncoderSim;
-  private EncoderSim m_rightEncoderSim;
+
+  // public REVPhysicsSim m_revPhysicsSim = new REVPhysicsSim();
+  // private SimDeviceSim m_leftEncoder1Sim;
+  // private SimDeviceSim m_rightEncoder1Sim;
+  // private SimDeviceSim m_leftEncoder2Sim;
+  // private SimDeviceSim m_rightEncoder2Sim;
   // The Field2d class shows the field in the sim GUI
   private Field2d m_fieldSim = new Field2d();
 
@@ -79,17 +75,19 @@ public class Drivetrain extends SubsystemBase {
   private static double speed;
   private static double turn;
 
+  public static XboxController controller = new XboxController(0);
+
   /** Creates a new ExampleSubsystem. */
 
   public Drivetrain() {
     m_rightMotors.setInverted(true);
 
-    m_leftEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
-    m_rightEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
+    // m_leftEncoder1.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
+    // m_rightEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
     
     ahrs = new AHRS(SerialPort.Port.kMXP);
 
-    resetEncoders();
+    // resetEncoders();
     m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()), 0, 0);
     if (RobotBase.isSimulation()) { // If our robot is simulated
       // This class simulates our drivetrain's motion around the field.
@@ -102,9 +100,10 @@ public class Drivetrain extends SubsystemBase {
               DriveConstants.kWheelDiameterMeters / 2.0,
               VecBuilder.fill(0, 0, 0.0001, 0.1, 0.1, 0.005, 0.005));
       // The encoder and gyro angle sims let us set simulated sensor readings
-      m_leftEncoderSim = new EncoderSim(m_leftEncoder);
-      m_rightEncoderSim = new EncoderSim(m_rightEncoder);
-
+      // REVPhysicsSim.getInstance().addSparkMax(leftMotor1, DCMotor.getNEO(1));
+      // REVPhysicsSim.getInstance().addSparkMax(leftMotor2, DCMotor.getNEO(1));
+      // REVPhysicsSim.getInstance().addSparkMax(rightMotor1, DCMotor.getNEO(1));
+      // REVPhysicsSim.getInstance().addSparkMax(rightMotor2, DCMotor.getNEO(1));
       // the Field2d class lets us visualize our robot in the simulation GUI.
       SmartDashboard.putData("Field", m_fieldSim);
     }
@@ -140,12 +139,12 @@ public class Drivetrain extends SubsystemBase {
     // Update the odometry in the periodic block
     m_odometry.update(
         Rotation2d.fromDegrees(getHeading()),
-        m_leftEncoder.getDistance(),
-        m_rightEncoder.getDistance());
+        m_leftEncoder1.getPosition(),
+        m_rightEncoder1.getPosition());
     m_fieldSim.setRobotPose(getPose());
-    SmartDashboard.putNumber("ForwardBackward", speed);
-    SmartDashboard.putNumber("Turning", turn);
-    SmartDashboard.putNumber("TurningSens", rate);
+    SmartDashboard.putNumber("ControllerY", -controller.getLeftY());
+    SmartDashboard.putNumber("ControllerX", -controller.getRightX());
+    
   }
 
   @Override
@@ -155,11 +154,6 @@ public class Drivetrain extends SubsystemBase {
         m_leftMotors.get() * RobotController.getBatteryVoltage(),
         m_rightMotors.get() * RobotController.getBatteryVoltage());
     m_drivetrainSimulator.update(0.020);
-
-    m_leftEncoderSim.setDistance(m_drivetrainSimulator.getLeftPositionMeters());
-    m_leftEncoderSim.setRate(m_drivetrainSimulator.getLeftVelocityMetersPerSecond());
-    m_rightEncoderSim.setDistance(m_drivetrainSimulator.getRightPositionMeters());
-    m_rightEncoderSim.setRate(m_drivetrainSimulator.getRightVelocityMetersPerSecond());
     int dev = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[0]");
     SimDouble angle = new SimDouble(SimDeviceDataJNI.getSimValueHandle(dev, "Yaw"));
     angle.set(-m_drivetrainSimulator.getHeading().getDegrees());
@@ -173,14 +167,14 @@ public class Drivetrain extends SubsystemBase {
     return m_odometry.getPoseMeters();
   }
 
-  public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-    return new DifferentialDriveWheelSpeeds(m_leftEncoder.getRate(), m_rightEncoder.getRate());
-  }
+  // public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+  //   return new DifferentialDriveWheelSpeeds(m_leftEncoder.getRate(), m_rightEncoder.getRate());
+  // }
 
   public void resetOdometry(Pose2d pose) {
-    resetEncoders();
+    // resetEncoders();
     m_drivetrainSimulator.setPose(pose);
-    m_odometry.resetPosition(Rotation2d.fromDegrees(getHeading()), m_leftEncoder.getDistance(), m_rightEncoder.getDistance(), pose);
+    m_odometry.resetPosition(Rotation2d.fromDegrees(getHeading()), m_leftEncoder1.getPosition(), m_rightEncoder1.getPosition(), pose);
   }
 
   public void arcadeDrive(double fwd, double rot) {
@@ -198,50 +192,50 @@ public class Drivetrain extends SubsystemBase {
     m_drive.feed();
   }
 
-  public void resetEncoders() {
-    m_leftEncoder.reset();
-    m_rightEncoder.reset();
-  }
+  // public void resetEncoders() {
+  //   m_leftEncoder.reset();
+  //   m_rightEncoder.reset();
+  // }
 
-  public int getLeftEncoderCount() {
-    return m_leftEncoder.get();
-  }
+  // public int getLeftEncoderCount() {
+  //   return m_leftEncoder.get();
+  // }
 
-  public int getRightEncoderCount() {
-    return m_rightEncoder.get();
-  }
+  // public int getRightEncoderCount() {
+  //   return m_rightEncoder.get();
+  // }
 
-  public double getLeftDistanceInch() {
-    return m_leftEncoder.getDistance();
-  }
+  // public double getLeftDistanceInch() {
+  //   return m_leftEncoder.getDistance();
+  // }
 
-  public double getRightDistanceInch() {
-    return m_rightEncoder.getDistance();
-  }
+  // public double getRightDistanceInch() {
+  //   return m_rightEncoder.getDistance();
+  // }
 
-  public double getAverageDistanceInch() {
-    return (getLeftDistanceInch() + getRightDistanceInch()) / 2.0;
-  }
+  // public double getAverageDistanceInch() {
+  //   return (getLeftDistanceInch() + getRightDistanceInch()) / 2.0;
+  // }
 
-  public double getLeftVelocity() {
-    return m_leftEncoder.getRate();
-  }
+  // public double getLeftVelocity() {
+  //   return m_leftEncoder.getRate();
+  // }
 
-  public double getRightVelocity() {
-    return m_rightEncoder.getRate();
-  }
+  // public double getRightVelocity() {
+  //   return m_rightEncoder.getRate();
+  // }
 
-  public double getAverageEncoderDistance() {
-    return (m_leftEncoder.getDistance() + m_rightEncoder.getDistance()) / 2.0;
-  }
+  // public double getAverageEncoderDistance() {
+  //   return (m_leftEncoder.getDistance() + m_rightEncoder.getDistance()) / 2.0;
+  // }
 
-  public Encoder getLeftEncoder() {
-    return m_leftEncoder;
-  }
+  // public Encoder getLeftEncoder() {
+  //   return m_leftEncoder;
+  // }
 
-  public Encoder getRightEncoder() {
-    return m_rightEncoder;
-  }
+  // public Encoder getRightEncoder() {
+  //   return m_rightEncoder;
+  // }
 
   public void setMaxOutput(double maxOutput) {
     m_drive.setMaxOutput(maxOutput);
@@ -257,14 +251,16 @@ public class Drivetrain extends SubsystemBase {
   
   public void controllerMovement(XboxController controller){
     // rate = (0.5 * -controller.getRawAxis(3)) + 0.5;
-    // speed = -controller.getRawAxis(1) * 0.5;
-    // turn = controller.getRawAxis(2) * rate * 0.5;
-    // double left = speed + turn;
-    // double right = speed - turn;
-    // leftMotor1.set(left);
-    // leftMotor2.set(-left);
-    // rightMotor1.set(-right);
-    // rightMotor2.set(right);
-    m_drive.arcadeDrive(-controller.getLeftY(), -controller.getRightX());
+    speed = -controller.getLeftY();
+    turn = controller.getRightX();
+    double left = speed + turn;
+    double right = speed - turn;
+    leftMotor1.set(left);
+    leftMotor2.set(-left);
+    rightMotor1.set(-right);
+    rightMotor2.set(right);
+
+    
+
   }
 }
