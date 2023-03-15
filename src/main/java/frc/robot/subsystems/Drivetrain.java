@@ -251,16 +251,20 @@ public class Drivetrain extends SubsystemBase {
   
   public void controllerMovement(XboxController controller){
     // rate = (0.5 * -controller.getRawAxis(3)) + 0.5;
-    speed = -controller.getLeftY();
-    turn = controller.getRightX();
+    speed = controller.getLeftY();
+    turn = -controller.getRightX();
     double left = speed + turn;
     double right = speed - turn;
     leftMotor1.set(left);
     leftMotor2.set(-left);
-    rightMotor1.set(-right);
-    rightMotor2.set(right);
+    rightMotor1.set(right);
+    rightMotor2.set(-right);
 
-    
+    // leftMotor1.set(0.5);
+    // leftMotor2.set(-0.5);
+    // rightMotor1.set(0.5);
+    // rightMotor2.set(-0.5);
+
 
   }
 }
