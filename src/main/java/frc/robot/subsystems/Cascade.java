@@ -90,24 +90,24 @@ public class Cascade extends SubsystemBase {
     m_pidController2.setSmartMotionAllowedClosedLoopError(allowedErr, smartMotionSlot2);
 
     // display PID coefficients on SmartDashboard
-    SmartDashboard.putNumber("P Gain 1", kP);
-    SmartDashboard.putNumber("I Gain 1", kI);
-    SmartDashboard.putNumber("D Gain 1", kD);
-    SmartDashboard.putNumber("I Zone 1", kIz);
-    SmartDashboard.putNumber("Feed Forward 1", kFF);
-    SmartDashboard.putNumber("Max Output 1", kMaxOutput);
-    SmartDashboard.putNumber("Min Output 1", kMinOutput);
+    SmartDashboard.putNumber("P Gain 2", kP);
+    SmartDashboard.putNumber("I Gain 2", kI);
+    SmartDashboard.putNumber("D Gain 2", kD);
+    SmartDashboard.putNumber("I Zone 2", kIz);
+    SmartDashboard.putNumber("Feed Forward 2", kFF);
+    SmartDashboard.putNumber("Max Output 2", kMaxOutput);
+    SmartDashboard.putNumber("Min Output 2", kMinOutput);
 
     // display Smart Motion coefficientso
-    SmartDashboard.putNumber("Max Velocity 1", maxVel);
-    SmartDashboard.putNumber("Min Velocity 1", minVel);
-    SmartDashboard.putNumber("Max Acceleration 1", maxAcc);
-    SmartDashboard.putNumber("Allowed Closed Loop Error 1", allowedErr);
-    SmartDashboard.putNumber("Set Position 1", 0);
-    SmartDashboard.putNumber("Set Velocity 1", 0);
+    SmartDashboard.putNumber("Max Velocity 2", maxVel);
+    SmartDashboard.putNumber("Min Velocity 2", minVel);
+    SmartDashboard.putNumber("Max Acceleration 2", maxAcc);
+    SmartDashboard.putNumber("Allowed Closed Loop Error 2", allowedErr);
+    SmartDashboard.putNumber("Set Position 2", 0);
+    SmartDashboard.putNumber("Set Velocity 2", 0);
 
     // button to toggle between velocity and smart motion modes
-    SmartDashboard.putBoolean("Mode 1", true);
+    SmartDashboard.putBoolean("Mode 2", true);
   }
 
   @Override
@@ -164,6 +164,7 @@ public class Cascade extends SubsystemBase {
     // motor2.setVoltage(Volt2);
 
     m_pidController1.setReference(setPoint, CANSparkMax.ControlType.kSmartMotion);
+    m_pidController2.setReference(setPoint, CANSparkMax.ControlType.kSmartMotion);
     
   }
 

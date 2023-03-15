@@ -96,10 +96,10 @@ public final class Constants {
   public static final class CascadeConstants {
     public static final int kCascadeMotor1Port = 6;
     public static final int kCascadeMotor2Port = 7;
-    public static final int[] kCascadeEncoder1Ports = new int[] {10,11};
-    public static final boolean kCascadeEncoder1Reversed = false;
-    public static final int[] kCascadeEncoder2Ports = new int[] {12,13};
-    public static final boolean kCascadeEncoder2Reversed = false;
+    // public static final int[] kCascadeEncoder1Ports = new int[] {10,11};
+    // public static final boolean kCascadeEncoder1Reversed = false;
+    // public static final int[] kCascadeEncoder2Ports = new int[] {12,13};
+    // public static final boolean kCascadeEncoder2Reversed = false;
     public static final double stallCurrent = 105;
     public static final double nVolt = 12;
     public static final double testSetpoint = 100;
