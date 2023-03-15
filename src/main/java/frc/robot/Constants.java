@@ -130,5 +130,10 @@ public final class Constants {
     public static final double tjson = 0;
     public static final double tclass = 0;
     public static final double speed = 0;
+
+    public static final double GOAL_HEIGHT = 0;
+    public static final double LIMELIGHT_HEIGHT = 0;
+    public static final double LIMELIGHT_MOUNT_ANGLE = 0;
+
   }
 }
