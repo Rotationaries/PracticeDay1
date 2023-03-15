@@ -109,6 +109,12 @@ public final class Constants {
     public static final double kD = 0;
   }
 
+  public static final class IntakeConstants {
+    public static double CONVEYOR_SPEED = .5;
+    public static double INTAKE_SPEED = -.65;
+    public static double INDEXER_SPEED = .7;  
+  }
+
   public static final class LimelightConstants {
     public static final double tx = 0;
     public static final double ty = 0;
