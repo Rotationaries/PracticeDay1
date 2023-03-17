@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -27,7 +28,11 @@ public class Cascade extends SubsystemBase {
 
   private SparkMaxPIDController m_pidController1, m_pidController2;
 
-  public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, maxVel, minVel, maxAcc, allowedErr, setPoint;
+  public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, maxVel, minVel, maxAcc, allowedErr;
+  
+  public boolean atStage;
+
+  private final Joystick joystick = new Joystick (0);
 
 
   /** Creates a new CascadeSubsystem. */
@@ -139,9 +144,9 @@ public class Cascade extends SubsystemBase {
     if((maxA != maxAcc)) { m_pidController1.setSmartMotionMaxAccel(maxA,0); maxAcc = maxA; }
     if((allE != allowedErr)) { m_pidController1.setSmartMotionAllowedClosedLoopError(allE,0); allowedErr = allE; }
 
-    double setPoint, processVariable;
+    double processVariable;
     boolean mode = SmartDashboard.getBoolean("Mode", false);
-    setPoint = SmartDashboard.getNumber("Set Position", 0);
+    // setPoint = SmartDashboard.getNumber("Set Position", 0);
       /**
        * As with other PID modes, Smart Motion is set by calling the
        * setReference method on an existing pid object and setting
@@ -149,12 +154,16 @@ public class Cascade extends SubsystemBase {
        */
     processVariable = m_encoder1.getPosition(); 
     
-    SmartDashboard.putNumber("SetPoint", setPoint);
+    // SmartDashboard.putNumber("SetPoint", setPoint);
     SmartDashboard.putNumber("Process Variable", processVariable);
     SmartDashboard.putNumber("Output", motor1.getAppliedOutput());
+
+    cascadeDrive();
+
   }
 
-  public void cascadeDrive(double speed, double distance) {
+  public void cascadeDrive() {
+    atStage = false;
     // var batteryVoltage = RobotController.getBatteryVoltage();
     // if (Math.max(Math.abs(Volt1), Math.abs(Volt2)) > batteryVoltage) {
     //   Volt1 *= batteryVoltage / 12.0;
@@ -162,11 +171,54 @@ public class Cascade extends SubsystemBase {
     // }
     // motor1.setVoltage(Volt1);
     // motor2.setVoltage(Volt2);
-
-    m_pidController1.setReference(setPoint, CANSparkMax.ControlType.kSmartMotion);
-    m_pidController2.setReference(setPoint, CANSparkMax.ControlType.kSmartMotion);
+    if(joystick.getRawButtonPressed(7)){
+      m_pidController1.setReference(CascadeConstants.kstage0, CANSparkMax.ControlType.kSmartMotion);
+      m_pidController2.setReference(CascadeConstants.kstage0, CANSparkMax.ControlType.kSmartMotion);
+    }
+    if(joystick.getRawButtonPressed(8)){
+      m_pidController1.setReference(CascadeConstants.kstage1, CANSparkMax.ControlType.kSmartMotion);
+      m_pidController2.setReference(CascadeConstants.kstage1, CANSparkMax.ControlType.kSmartMotion);
+    }
+    if(joystick.getRawButtonPressed(9)){
+      m_pidController1.setReference(CascadeConstants.kstage2, CANSparkMax.ControlType.kSmartMotion);
+      m_pidController2.setReference(CascadeConstants.kstage2, CANSparkMax.ControlType.kSmartMotion);
+    }
+    if(joystick.getRawButtonPressed(10)){
+      m_pidController1.setReference(CascadeConstants.kstage3, CANSparkMax.ControlType.kSmartMotion);
+      m_pidController2.setReference(CascadeConstants.kstage3, CANSparkMax.ControlType.kSmartMotion);
+    }
+    atStage = true;
     
   }
+
+  public void cascadeDrive(double setpoint) {
+    atStage = false;
+    // var batteryVoltage = RobotController.getBatteryVoltage();
+    // if (Math.max(Math.abs(Volt1), Math.abs(Volt2)) > batteryVoltage) {
+    //   Volt1 *= batteryVoltage / 12.0;
+    //   Volt2 *= batteryVoltage / 12.0;
+    // }
+    // motor1.setVoltage(Volt1);
+    // motor2.setVoltage(Volt2);
+    if(joystick.getRawButtonPressed(7)){
+      m_pidController1.setReference(CascadeConstants.kstage0, CANSparkMax.ControlType.kSmartMotion);
+      m_pidController2.setReference(CascadeConstants.kstage0, CANSparkMax.ControlType.kSmartMotion);
+    }
+    if(joystick.getRawButtonPressed(8)){
+      m_pidController1.setReference(CascadeConstants.kstage1, CANSparkMax.ControlType.kSmartMotion);
+      m_pidController2.setReference(CascadeConstants.kstage1, CANSparkMax.ControlType.kSmartMotion);
+    }
+    if(joystick.getRawButtonPressed(9)){
+      m_pidController1.setReference(CascadeConstants.kstage2, CANSparkMax.ControlType.kSmartMotion);
+      m_pidController2.setReference(CascadeConstants.kstage2, CANSparkMax.ControlType.kSmartMotion);
+    }
+    if(joystick.getRawButtonPressed(10)){
+      m_pidController1.setReference(CascadeConstants.kstage3, CANSparkMax.ControlType.kSmartMotion);
+      m_pidController2.setReference(CascadeConstants.kstage3, CANSparkMax.ControlType.kSmartMotion);
+    }
+    atStage = true;
+    
+  } 
 
   public boolean atBottom() {
     return m_encoder1.getPosition() == 0 && m_encoder2.getPosition() == 0;
@@ -212,4 +264,5 @@ public class Cascade extends SubsystemBase {
   public RelativeEncoder getEncoder2() {
     return m_encoder2;
   }
+  
 }

@@ -7,41 +7,35 @@ package frc.robot.commands.Cascade;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Cascade;
 
-public class CascadeDistance extends CommandBase {
-  private final Cascade m_cascade;
-  private final double m_distance;
-  private final double m_speed;
-  /** Creates a new CascadeDistance. */
-  public CascadeDistance(double speed, double distance, Cascade cascade) {
+public class CascadeJoystick extends CommandBase {
+  private final Cascade cascade;
+  // private final Joystick joystick;
+  /** Creates a new CascadeJoystick. */
+  public CascadeJoystick(Cascade cascade) {
     // Use addRequirements() here to declare subsystem dependencies.
-    m_distance = distance;
-    m_speed = speed;
-    m_cascade = cascade;
-    addRequirements(cascade);
+    this.cascade = cascade;
+    // this.joystick = joystick;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_cascade.cascadeDrive(0, 0);
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_cascade.cascadeDrive(m_speed, m_distance);
+    cascade.cascadeDrive();
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    m_cascade.cascadeDrive(0, 0);
-  }
-
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return cascade.atStage;
   }
 }

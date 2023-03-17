@@ -16,10 +16,10 @@ import edu.wpi.first.math.system.plant.LinearSystemId;
  */
 public final class Constants {
   public static final class DriveConstants {
-    public static final int kLeftMotor1Port = 2;
-    public static final int kLeftMotor2Port = 3;
-    public static final int kRightMotor1Port = 4;
-    public static final int kRightMotor2Port = 5;
+    public static final int kLeftMotor1Port = 3;
+    public static final int kLeftMotor2Port = 4;
+    public static final int kRightMotor1Port = 5;
+    public static final int kRightMotor2Port = 2;
 
     // public static final int[] kLeftEncoderPorts = new int[] {6, 7};
     // public static final int[] kRightEncoderPorts = new int[] {8, 9};
@@ -43,9 +43,9 @@ public final class Constants {
     // for *your* robot's drive.
     // The Robot Characterization Toolsuite provides a convenient tool for obtaining these
     // values for your robot.
-    public static final double ksVolts = 1.48;
-    public static final double kvVoltSecondsPerMeter = 2.98;
-    public static final double kaVoltSecondsSquaredPerMeter = 0.0313;
+    public static final double ksVolts = 0.22;
+    public static final double kvVoltSecondsPerMeter = 1.98;
+    public static final double kaVoltSecondsSquaredPerMeter = 0.2;
 
     // These are example values only - DO NOT USE THESE FOR YOUR OWN ROBOT!
     // These characterization values MUST be determined either experimentally or theoretically
@@ -67,6 +67,18 @@ public final class Constants {
 
     // Example value only - as above, this must be tuned for your drive!
     public static final double kPDriveVel = 8.5;
+    public static final double kTurnToleranceDeg = 0; //how much we can turn - need to set it up
+    public static final double kTurnRateToleranceDegPerS = 5; //rate at which it can turn per second - need to set up 
+    public static final double kMaxTurnRateDegPerS = 0; //set this
+    public static final double kMaxTurnAccelerationDegPerSSquared = 0; //set this
+    public static final double kMaxSpeedMetersPerSecond = 0; //set this
+    public static final double kMaxAccelerationMetersPerSecondSquared = 0; //set this
+
+    public static final double kP = 3.2181;
+    public static final double kI = 0;
+    public static final double kD = 0;
+
+    public static final double kcircumference = kWheelDiameterMeters * Math.PI;
   }
 
   public static final class OIConstants {
@@ -107,6 +119,11 @@ public final class Constants {
     public static final double kP = 3.2181;
     public static final double kI = 0;
     public static final double kD = 0;
+    public static final double kstage0 = 0;
+    public static final double kstage1 = 0;
+    public static final double kstage2 = 0;
+    public static final double kstage3 = 0;
+
   }
 
   public static final class IntakeConstants {
