@@ -6,6 +6,7 @@ package frc.robot;
 
 import com.revrobotics.REVPhysicsSim;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -16,8 +17,10 @@ import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Cascade;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Intake;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -35,8 +38,12 @@ public class Robot extends TimedRobot {
 
   private Drivetrain m_drive = new Drivetrain();
   private Cascade m_cascade = new Cascade();
+  private Arm m_arm = new Arm();
+  private Intake m_intake = new Intake();
 
-  private XboxController controller = new XboxController(1);
+  private XboxController controller = new XboxController(0);
+
+
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -64,7 +71,7 @@ public class Robot extends TimedRobot {
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
-    //CommandScheduler.getInstance().run();
+    CommandScheduler.getInstance().run();
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -98,6 +105,7 @@ public class Robot extends TimedRobot {
     // SmartDashboard.putNumber("ForwardBackward", );
     // SmartDashboard.putNumber("Turning", y);
     // SmartDashboard.putNumber("TurningSens", area);
+    
   }
 
   @Override
@@ -114,9 +122,11 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    // m_drive.arcadeDrive(0.5, 0.5);
-    m_drive.arcadeDrive(-controller.getLeftY(), -controller.getRightX());
+    //m_drive.arcadeDrive(MathUtil.clamp(controller.getLeftY(), -0.8, 0.8), MathUtil.clamp(-controller.getRightX(), -0.8, 0.8));
+    m_drive.controllerMovement(controller);
     m_cascade.cascadeDrive();
+    m_arm.armDrive();
+    m_intake.intakeDrive();
 
   }
 
