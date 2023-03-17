@@ -120,9 +120,9 @@ public final class Constants {
     public static final double kI = 0;
     public static final double kD = 0;
     public static final double kstage0 = 0;
-    public static final double kstage1 = 0;
-    public static final double kstage2 = 0;
-    public static final double kstage3 = 0;
+    public static final double kstage1 = 1;
+    public static final double kstage2 = 2;
+    public static final double kstage3 = 3;
 
   }
 

@@ -35,6 +35,8 @@ public class Drivetrain extends SubsystemBase {
   public static CANSparkMax leftMotor1 = new CANSparkMax(DriveConstants.kLeftMotor1Port, MotorType.kBrushless);
   public static CANSparkMax leftMotor2 = new CANSparkMax(DriveConstants.kLeftMotor2Port, MotorType.kBrushless);
 
+
+
   MotorControllerGroup m_leftMotors = new MotorControllerGroup(leftMotor1, leftMotor2);
 
 
@@ -47,6 +49,8 @@ public class Drivetrain extends SubsystemBase {
 
   // The robot's drive
   private final DifferentialDrive m_drive = new DifferentialDrive(m_leftMotors, m_rightMotors);
+
+  // m_drive.setSafetyEnabled(false);
 
   // The left-side drive encoder
   private final RelativeEncoder m_leftEncoder1 = leftMotor1.getEncoder();
@@ -149,6 +153,9 @@ public class Drivetrain extends SubsystemBase {
     m_fieldSim.setRobotPose(getPose());
     SmartDashboard.putNumber("ControllerY", -controller.getLeftY());
     SmartDashboard.putNumber("ControllerX", -controller.getRightX());
+
+    m_drive.setSafetyEnabled(false);
+    // m_drive.feed();
     
   }
 
@@ -269,7 +276,7 @@ public class Drivetrain extends SubsystemBase {
     // rightMotor1.set(right);
     // rightMotor2.set(-right);
 
-    m_drive.arcadeDrive(-controller.getLeftY(), controller.getRightX());
+    m_drive.arcadeDrive(-controller.getLeftY(), -controller.getRightX()); 
     // leftMotor1.set(0.5);
     // leftMotor2.set(0.5);
     // rightMotor1.set(0.6);

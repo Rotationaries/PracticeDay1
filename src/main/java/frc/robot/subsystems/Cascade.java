@@ -18,7 +18,7 @@ import frc.robot.Constants.CascadeConstants;
 public class Cascade extends SubsystemBase {
 
   public static CANSparkMax motor1 = new CANSparkMax(CascadeConstants.kCascadeMotor1Port, MotorType.kBrushless);
-  public static CANSparkMax motor2 = new CANSparkMax(CascadeConstants.kCascadeMotor1Port, MotorType.kBrushless);
+  public static CANSparkMax motor2 = new CANSparkMax(CascadeConstants.kCascadeMotor2Port, MotorType.kBrushless);
 
   MotorControllerGroup m_cascadeMotors = new MotorControllerGroup(motor1, motor2);
   
@@ -80,6 +80,8 @@ public class Cascade extends SubsystemBase {
     // button to toggle between velocity and smart motion modes
     SmartDashboard.putBoolean("Mode 1", true);
 
+
+    m_pidController2 = motor2.getPIDController();
 
     m_pidController2.setP(kP);
     m_pidController2.setI(kI);
@@ -219,6 +221,8 @@ public class Cascade extends SubsystemBase {
     atStage = true;
     
   } 
+
+  
 
   public boolean atBottom() {
     return m_encoder1.getPosition() == 0 && m_encoder2.getPosition() == 0;
